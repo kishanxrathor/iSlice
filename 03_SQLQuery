@@ -1,0 +1,150 @@
+if exists(select * from sys.objects where name='ischool_subjects_lookup')
+	drop table ischool_subjects_lookup
+GO
+if exists(select * from sys.objects where name='ischool_students')
+	drop table ischool_students
+GO
+if exists(select * from sys.objects where name='ischool_departments_lookup')
+	drop table ischool_departments_lookup
+GO
+if exists(select * from sys.objects where name='student_admission_term_lookup')
+	drop table student_admission_term_lookup
+GO
+if exists(select * from sys.objects where name='student_subject_selection_requests')
+	drop table student_subject_selection_requests
+GO
+
+CREATE TABLE [dbo].[ischool_departments_lookup]
+    (
+	    [department_id] [varchar](100) NOT NULL,
+        CONSTRAINT [PK_ischool_departments_lookup_department_id] PRIMARY KEY ([department_id])
+    )
+
+CREATE TABLE [dbo].[ischool_subjects_lookup]
+    (
+	    [subject_id] [varchar](100) NOT NULL,
+        CONSTRAINT [PK_ischool_subjects_lookup_subject_id] PRIMARY KEY ([subject_id])
+    )
+
+CREATE TABLE [dbo].[student_admission_term_lookup]
+    (
+	    [student_admission_term] [varchar](20) NOT NULL,
+        CONSTRAINT [PK_student_admission_term_lookup_student_admission_term] PRIMARY KEY ([student_admission_term])
+    )
+
+CREATE TABLE [dbo].[ischool_students]
+(
+	[student_id] [int] NOT NULL,
+	[student_suid] [char](9) NOT NULL,
+	[student_lastname] [varchar](50) NOT NULL,
+	[student_firstname] [varchar](50) NOT NULL,
+	[student_admission_term] [varchar](20) NOT NULL,
+	[student_department] [varchar](100) NOT NULL,
+		
+	CONSTRAINT [PK_ischool_students_student_id] PRIMARY KEY ([student_id] ),
+    CONSTRAINT [fk_ischool_students_student_department] FOREIGN KEY (student_department) REFERENCES ischool_departments_lookup(department_id),
+    CONSTRAINT [fk_ischool_students_student_admission_term] FOREIGN KEY (student_admission_term) REFERENCES student_admission_term_lookup(student_admission_term)
+ )
+
+ create table [dbo].[student_subject_selection_requests]
+(
+	request_id int identity not null,
+	request_student_id int not null,
+    requested_subject varchar(100) not null,
+	request_approved_student_id int null,
+	request_approved_date datetime null,
+	constraint pk_student_subject_selection_requests_request_id primary key (request_id),
+	constraint fk_student_subject_selection_requests_request_student_id foreign key (request_student_id) references ischool_students(student_id),
+	constraint fk_student_subject_selection_requests_request_approved_student_id foreign key (request_approved_student_id) references ischool_students(student_id),
+    constraint fk_student_subject_selection_requests_requested_subject foreign key (requested_subject) references ischool_subjects_lookup(subject_id),
+)
+go
+
+-- inserting into ischool_departments_lookup
+INSERT [dbo].[ischool_departments_lookup] ([department_id]) VALUES (N'Applied Data Science, MS')
+INSERT [dbo].[ischool_departments_lookup] ([department_id]) VALUES (N'Enterprise Data Systems, MS')
+INSERT [dbo].[ischool_departments_lookup] ([department_id]) VALUES (N'Information Management for Executives, MS')
+INSERT [dbo].[ischool_departments_lookup] ([department_id]) VALUES (N'Information Management, MS')
+INSERT [dbo].[ischool_departments_lookup] ([department_id]) VALUES (N'Information Systems, MS')
+INSERT [dbo].[ischool_departments_lookup] ([department_id]) VALUES (N'Library and Information Science, MS')
+go
+
+-- inserting into ischool_subjects_lookup
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'IST 659 - Data Administration Concepts and Database Management ')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'IST 687 - Introduction to Data Science')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'IST 707 - Applied Machine Learning')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'IST 718 - Big Data Analytics')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'IST 772 - Quantitative Reasoning for Data Science ')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'SCM 651 - Business Analytics')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'ACC 652 - Accounting Analytics')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'MAR 653 - Marketing Analytics')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'MBC 638 - Data Analysis and Decision Making')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'SCM 702 - Principles of Management Science')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'IST 664 - Natural Language Processing')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'IST 736 - Text Mining')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'IST 652 - Scripting for Data Analysis')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'IST 722 - Data Warehouse')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'IST 769 - Advanced Big Data Management')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'IST 615 - Cloud Management')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'IST 618 - Information Policy')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'IST 623 - Introduction to Information Security')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'IST 644 - Managing Data Science Projects')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'IST 719 - Information Visualization')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'IST 974 - Internship in Applied Data Science')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'MAS 766 - Linear Statistical Models I: Regression Models')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'MAS 777 - Time Series Modeling and Analysis')
+INSERT [dbo].[ischool_subjects_lookup] ([subject_id]) VALUES (N'IST 782 - Applied Data Science Portfolio')
+GO
+
+-- inserting into student_admission_term_lookup
+INSERT [dbo].[student_admission_term_lookup] ([student_admission_term]) VALUES (N'Fall 2022')
+INSERT [dbo].[student_admission_term_lookup] ([student_admission_term]) VALUES (N'Spring 2022')
+INSERT [dbo].[student_admission_term_lookup] ([student_admission_term]) VALUES (N'Summer 2022')
+GO
+
+-- inserting into ischool_students
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (1, N'111220001', N'Photo', N'Arial', N'Fall 2022', N'Information Management for Executives, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (2, N'111220002', N'Ladd', N'Sal', N'Fall 2022', N'Information Management for Executives, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (3, N'111220003', N'Dawind', N'Dustin', N'Fall 2022', N'Information Management, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (4, N'111220004', N'Shores', N'Sandi', N'Fall 2022', N'Information Management, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (5, N'111220005', N'Gunnering', N'Isabelle', N'Summer 2022', N'Information Management for Executives, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (6, N'111220006', N'Hvmeehom', N'Lee', N'Summer 2022', N'Information Management, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (7, N'111220007', N'Wrench', N'Allan', N'Fall 2022', N'Information Systems, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (8, N'111220008', N'Gator', N'Ally', N'Fall 2022', N'Library and Information Science, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (9, N'111220009', N'Frienzergon', N'Alma', N'Fall 2022', N'Information Systems, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (10, N'111220010', N'Choke', N'Artie', N'Fall 2022', N'Information Management, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (11, N'111220011', N'Alott', N'Bette', N'Fall 2022', N'Library and Information Science, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (12, N'111220012', N'Melator', N'Bill', N'Fall 2022', N'Library and Information Science, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (13, N'111220013', N'Enweave', N'Bob', N'Fall 2022', N'Library and Information Science, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (14, N'111220014', N'Nugget', N'Chris P.', N'Spring 2022', N'Information Management for Executives, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (15, N'111220015', N'Itupp', N'Chuck', N'Spring 2022', N'Library and Information Science, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (16, N'111220016', N'Erin', N'Detyers', N'Spring 2022', N'Information Management, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (17, N'111220017', N'Tan', N'Kurt', N'Spring 2022', N'Applied Data Science, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (18, N'111220018', N'Case', N'Justin', N'Spring 2022 ', N'Applied Data Science, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (19, N'111220019', N'Belevit', N'Kent', N'Spring 2022', N'Applied Data Science, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (20, N'111220020', N'Mi', N'Mary', N'Summer 2022', N'Applied Data Science, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (21, N'111220021', N'Mumm', N'Maxi', N'Spring 2022', N'Information Management for Executives, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (22, N'111220022', N'Rophone', N'Mike', N'Spring 2022', N'Information Systems, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (23, N'111220023', N'Tural', N'Nat', N'Spring 2022', N'Library and Information Science, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (24, N'111220024', N'Moni', N'Otto', N'Summer 2022', N'Information Systems, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (25, N'111220025', N'O''Furniture', N'Patty', N'Spring 2022', N'Information Systems, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (26, N'111220026', N'Moss', N'Pete', N'Spring 2022', N'Library and Information Science, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (27, N'111220027', N'Docktur-Indahaus', N'Sara', N'Summer 2022', N'Library and Information Science, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (28, N'111220028', N'Isnomor', N'Sara', N'Spring 2022', N'Applied Data Science, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (29, N'111220029', N'Ofewe', N'Seymour', N'Spring 2022', N'Enterprise Data Systems, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (30, N'111220030', N'Shores', N'Sonny', N'Spring 2022', N'Enterprise Data Systems, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (31, N'111220031', N'Itupp', N'Tally', N'Summer 2022', N'Enterprise Data Systems, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (32, N'111220032', N'Androll', N'Tuck', N'Summer 2022', N'Enterprise Data Systems, MS')
+INSERT [dbo].[ischool_students] ([student_id], [student_suid], [student_lastname], [student_firstname], [student_admission_term], [student_department]) VALUES (33, N'111220033', N'Rathor', N'Kishan', N'Fall 2022', N'Applied Data Science, MS')
+GO
+
+-- inserting into student_subject_selection_requests
+insert [dbo].[student_subject_selection_requests] ([request_student_id],[requested_subject],[request_approved_student_id],[request_approved_date]) values (33, N'IST 707 - Applied Machine Learning', null, null)
+go
+
+
+select * from ischool_departments_lookup
+select * from ischool_subjects_lookup
+select * from student_admission_term_lookup
+select * from ischool_students
+select * from student_subject_selection_requests
